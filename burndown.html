@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="canvasjs.min.js"></script>
+    <script type="text/javascript">
+      window.onload = function () {
+      var actualBurndown;
+        $.getJSON('./burndown.json', function(data){
+          actualBurndown = data.actualBurndown;
+          expectedBurndown = data.expectedBurndown;
+
+          var chart= new CanvasJS.Chart("chartContainer", {
+            title:{
+              text: "Burndown Chart"
+            },
+            axisX: {
+              lineThickness: 2
+            },
+            data: [
+              {
+                type: "stepLine",
+                dataPoints: []
+              },
+              {
+                type: "line",
+                dataPoints: []
+              }
+            ]
+          });
+
+          function renderPoints(actualBurndown, expectedBurndown){
+            for (let i = 0 ;i < actualBurndown.length; i++) {
+              chart.options.data[0].dataPoints.push({
+                x: new Date(actualBurndown[i].date),
+                y: actualBurndown[i].points,
+                indexLabel: " "+actualBurndown[i].points,
+              });
+              chart.options.data[1].dataPoints.push({
+                x: new Date(expectedBurndown[i].date),
+                y: expectedBurndown[i].points,
+                indexLabel: " "+parseInt(expectedBurndown[i].points),
+              });
+            }
+          chart.render();
+          };
+        renderPoints(actualBurndown, expectedBurndown);
+        });
+      }
+
+
+    </script>
+    </head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;">
+</div>
+</body>
+</html>

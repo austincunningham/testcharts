@@ -1,0 +1,59 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="canvasjs.min.js"></script>
+    <script type="text/javascript">
+      window.onload = function () {
+        var averageage;
+        $.getJSON('./averageage.json', function(data){
+          averageage = data;
+          expectedBurndown = data.expectedBurndown;
+
+          var chart= new CanvasJS.Chart("chartContainer", {
+            title:{
+              text: "Average Age Chart"
+            },
+            axisX: {
+              lineThickness: 2
+            },
+            data: [
+              {
+                type: "bar",
+                dataPoints: []
+              },
+              {
+                type: "stepLine",
+                dataPoints: []
+              }
+            ]
+          });
+
+          function renderPoints(averageage){
+            for (let i = 0 ;i < averageage.length; i++) {
+              chart.options.data[0].dataPoints.push({
+                x: new Date(averageage[i].key),
+                y: parseInt(averageage[i].value),
+                indexLabel: " "+averageage[i].value,
+              });
+              chart.options.data[1].dataPoints.push({
+                x: new Date(averageage[i].key),
+                y: averageage[i].value,
+                indexLabel: " "+parseInt(averageage[i].value),
+              });
+            }
+            chart.render();
+          };
+          renderPoints(averageage);
+        });
+      }
+
+
+    </script>
+</head>
+<body>
+<div id="chartContainer" style="height: 300px; width: 100%;">
+</div>
+</body>
+</html>
