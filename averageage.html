@@ -20,28 +20,30 @@
             },
             data: [
               {
-                type: "bar",
+                type: "stackedColumn",
                 dataPoints: []
               },
               {
-                type: "stepLine",
+                type: "line",
                 dataPoints: []
               }
             ]
           });
 
           function renderPoints(averageage){
-            for (let i = 0 ;i < averageage.length; i++) {
-              chart.options.data[0].dataPoints.push({
-                x: new Date(averageage[i].key),
-                y: parseInt(averageage[i].value),
-                indexLabel: " "+averageage[i].value,
-              });
-              chart.options.data[1].dataPoints.push({
-                x: new Date(averageage[i].key),
-                y: averageage[i].value,
-                indexLabel: " "+parseInt(averageage[i].value),
-              });
+            for (let key in averageage) {
+              if(averageage.hasOwnProperty(key)) {
+                chart.options.data[1].dataPoints.push({
+                  x: new Date(key),
+                  y: parseInt(averageage[key]),
+                  indexLabel: " " + parseInt(averageage[key]),
+                });
+                chart.options.data[0].dataPoints.push({
+                  x: new Date(key),
+                  y: averageage[key],
+                  indexLabel: " " +parseInt(averageage[key]),
+                });
+              }
             }
             chart.render();
           };
